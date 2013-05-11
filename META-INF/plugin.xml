@@ -46,6 +46,10 @@
               description="Generate Method">
           <add-to-group group-id="GenerateGroup" anchor="last"/>
       </action>
+      <action id="ImplementInterface" class="com.caplin.ImplementInterface" text="Implement Interface"
+              description="Implement Interface">
+          <add-to-group group-id="GenerateGroup" anchor="last"/>
+      </action>
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">

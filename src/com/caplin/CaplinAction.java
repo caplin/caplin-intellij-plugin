@@ -3,7 +3,9 @@ package com.caplin;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.apache.commons.lang.CharUtils;
 
 /**
  * Created with IntelliJ IDEA.
@@ -54,6 +56,35 @@ abstract class CaplinAction extends AnAction {
     protected String getFullClass(AnActionEvent e) {
         VirtualFile virtualFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
         return getNameSpace(virtualFile) + virtualFile.getNameWithoutExtension();
+    }
+
+    protected int getConstructorEndOffset(AnActionEvent e) {
+        Editor editor = e.getData(PlatformDataKeys.EDITOR);
+        String text = editor.getDocument().getText();
+        int brackets = 0;
+        boolean started = false;
+
+        for (int i = 0; i < text.length(); i++){
+            char character = text.charAt(i);
+            if (character == '{') {
+                brackets++;
+                started = true;
+            } else if (character == '}') {
+                brackets--;
+                if (started) {
+                    if (brackets == 0) {
+                        if (text.charAt(i+1) == ';') {
+                            return i+2;
+                        } else {
+                            return i+1;
+                        }
+                    }
+                } else {
+                    return 0;
+                }
+            }
+        }
+        return 0;
     }
 
 }

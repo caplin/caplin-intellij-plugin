@@ -13,7 +13,6 @@ import com.intellij.openapi.editor.ScrollType;
 public class DocEditor {
 
     public static void insertString(final AnActionEvent e, final String string) {
-
         Runner.runWriteCommand(e.getProject(), new Runnable() {
             public void run() {
                 Editor editor = e.getData(PlatformDataKeys.EDITOR);
@@ -25,11 +24,16 @@ public class DocEditor {
     }
 
     public static void appendString(final AnActionEvent e, final String string) {
+        Editor editor = e.getData(PlatformDataKeys.EDITOR);
+        insertStringAt(e, editor.getDocument().getTextLength(), string );
+    }
+
+    public static void insertStringAt(final AnActionEvent e, final int offset, final String string) {
         Runner.runWriteCommand(e.getProject(), new Runnable() {
             public void run() {
                 Editor editor = e.getData(PlatformDataKeys.EDITOR);
-                editor.getDocument().insertString(editor.getDocument().getTextLength(), string);
-                editor.getCaretModel().moveToOffset(editor.getDocument().getTextLength());
+                editor.getDocument().insertString(offset, string);
+                editor.getCaretModel().moveToOffset(offset);
                 editor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
             }
         });
