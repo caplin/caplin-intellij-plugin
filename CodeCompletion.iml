@@ -8,6 +8,26 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib" recursive="false" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="file://$APPLICATION_HOME_DIR$/plugins/JSIntentionPowerPack/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$APPLICATION_HOME_DIR$/plugins/JSIntentionPowerPack/lib" recursive="false" />
+      </library>
+    </orderEntry>
   </component>
 </module>
 
