@@ -3,6 +3,8 @@ package com.caplin.forms;
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
 public class ChooseInterface extends JDialog implements KeyListener {
     private JPanel contentPane;
@@ -74,16 +76,54 @@ public class ChooseInterface extends JDialog implements KeyListener {
             regex = regex + c + ".*";
         }
 
-        ArrayList<String> matches = new ArrayList<String>();
+        ArrayList<Match> matches = new ArrayList<Match>();
 
         for (int i = 0, l = interfaces.size(); i < l; i++) {
             if (interfaces.get(i).toLowerCase().matches(regex)) {
-                matches.add(interfaces.get(i));
+                matches.add(new Match(interfaces.get(i), 0));
             }
         }
 
-        interfacelist.setListData(matches.toArray());
+        for (int loop = 2, length = currentValue.length(); loop < length; loop++) {
+            ArrayList<String> parts = getParts(currentValue, loop);
+
+            for (int i = 0, l = matches.size(); i < l; i = i + 1) {
+                Match match = matches.get(i);
+                String matchName = match.getName().toLowerCase();
+
+                for (int lc = 0, pl = parts.size(); lc < pl; lc++)     {
+                    if (matchName.matches(".*" + parts.get(lc) + ".*")) {
+                        match.increaseRating(pl * 100);
+                    };
+                }
+            }
+        }
+
+        Collections.sort(matches);
+
+
+        String[] sorted = new String[matches.size()];
+        int count = 0;
+        for (Match match : matches) {
+            sorted[count] = match.getName() + match.getRating();
+            count++;
+        }
+
+        interfacelist.setListData(sorted);
     }
+
+    private ArrayList<String> getParts(String currentValue, int sectionLength) {
+        ArrayList<String> parts = new ArrayList<String>();
+        for (int i = 0, l = currentValue.length(); i + sectionLength < l; i++) {
+            try {
+                parts.add(currentValue.substring(i, sectionLength));
+            } catch (Exception e) {
+
+            }
+
+        }
+        return parts;
+    };
 
     @Override
     public void keyPressed(KeyEvent e) {

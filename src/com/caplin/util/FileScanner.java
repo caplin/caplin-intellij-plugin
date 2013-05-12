@@ -35,7 +35,7 @@ public class FileScanner {
 
         if (root != null) {
             collectInterfaces(root.findChild("apps"), interfaces);
-            collectInterfaces(root.findChild("sdk"), interfaces);
+            collectInterfaces(root.findFileByRelativePath("sdk/libs/javascript/caplin"), interfaces);
         }
 
         return interfaces;
@@ -57,12 +57,24 @@ public class FileScanner {
             try {
                 String contents = new String(child.contentsToByteArray());
                 if (contents.indexOf("@interface") != -1) {
-                    interfaces.add(child.getNameWithoutExtension());
+                    interfaces.add(getNameSpace(child) + child.getNameWithoutExtension());
                 }
             } catch (IOException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
         }
+    }
+
+    protected static String getNameSpace(VirtualFile virtualFile) {
+        String namespace = "";
+        VirtualFile parent = virtualFile.getParent();
+
+        while (parent != null && !parent.getName().equals("src")) {
+            namespace = parent.getName() + "." + namespace;
+            parent = parent.getParent();
+        }
+
+        return namespace;
     }
 
     private static VirtualFile getRoot(VirtualFile file) {
