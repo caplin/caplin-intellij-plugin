@@ -58,18 +58,23 @@ abstract class CaplinAction extends AnAction {
         return getNameSpace(virtualFile) + virtualFile.getNameWithoutExtension();
     }
 
-    protected int getConstructorEndOffset(AnActionEvent e) {
+    protected int getConstructorEndOffsetFromEvent(AnActionEvent e) {
         Editor editor = e.getData(PlatformDataKeys.EDITOR);
         String text = editor.getDocument().getText();
+        return getConstructorEndOffsetFromText(text);
+    }
+
+    protected int getConstructorEndOffsetFromText(String text) {
         int brackets = 0;
         boolean started = false;
+        boolean ignoringComments = false;
 
         for (int i = 0; i < text.length(); i++){
             char character = text.charAt(i);
-            if (character == '{') {
+            if (!ignoringComments && character == '{') {
                 brackets++;
                 started = true;
-            } else if (character == '}') {
+            } else if (!ignoringComments && character == '}') {
                 brackets--;
                 if (started) {
                     if (brackets == 0) {
@@ -79,9 +84,13 @@ abstract class CaplinAction extends AnAction {
                             return i+1;
                         }
                     }
-                } else {
-                    return 0;
                 }
+            }  else if (character == '/' && text.charAt(i+1) == '*') {
+                i = i + 1;
+                ignoringComments = true;
+            } else if (character == '*' && text.charAt(i+1) == '/') {
+                i = i + 1;
+                ignoringComments = false;
             }
         }
         return 0;

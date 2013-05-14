@@ -77,7 +77,7 @@ public class FileScanner {
         return namespace;
     }
 
-    private static VirtualFile getRoot(VirtualFile file) {
+    public static VirtualFile getRoot(VirtualFile file) {
        VirtualFile parent = file.getParent();
        while (parent != null) {
             if (parent.findChild("sdk") != null && parent.findChild("apps") != null) {

@@ -1,10 +1,11 @@
 package com.caplin.forms;
 
+import com.caplin.listener.SelectionListener;
+
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
 public class ChooseInterface extends JDialog implements KeyListener {
     private JPanel contentPane;
@@ -13,7 +14,9 @@ public class ChooseInterface extends JDialog implements KeyListener {
     private JList interfacelist;
     private JTextField searchField;
     private ArrayList<String> interfaces;
-    public ChooseInterface(ArrayList<String> interfaces) {
+    private SelectionListener listener;
+    public ChooseInterface(ArrayList<String> interfaces, SelectionListener listener) {
+        this.listener = listener;
         this.interfaces = interfaces;
         interfacelist.setListData(this.interfaces.toArray());
 
@@ -48,8 +51,9 @@ public class ChooseInterface extends JDialog implements KeyListener {
     }
 
     private void onOK() {
-        interfacelist.getSelectedValue();
-        interfacelist.getSelectionModel();
+        if (interfacelist.getSelectedValue() != null) {
+            listener.onSelected((String)interfacelist.getSelectedValue());
+        };
         dispose();
     }
 
@@ -58,10 +62,10 @@ public class ChooseInterface extends JDialog implements KeyListener {
     }
 
     public static void main(String[] args) {
-        ChooseInterface dialog = new ChooseInterface(com.caplin.util.FileScanner.getInterfaces(null));
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
+//        ChooseInterface dialog = new ChooseInterface(com.caplin.util.FileScanner.getInterfaces(null);
+//        dialog.pack();
+//        dialog.setVisible(true);
+//        System.exit(0);0
     }
 
     @Override
@@ -105,7 +109,7 @@ public class ChooseInterface extends JDialog implements KeyListener {
         String[] sorted = new String[matches.size()];
         int count = 0;
         for (Match match : matches) {
-            sorted[count] = match.getName() + match.getRating();
+            sorted[count] = match.getName();
             count++;
         }
 
