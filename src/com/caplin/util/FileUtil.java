@@ -8,6 +8,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
+import java.io.IOException;
+
 /**
  * Created with IntelliJ IDEA.
  * User: stephens
@@ -127,4 +129,21 @@ public class FileUtil {
        return null;
     }
 
+    static boolean isInterface(VirtualFile file) {
+        String contents = null;
+        Boolean isInterface = false;
+        try {
+            contents = new String(file.contentsToByteArray());
+            if (contents.indexOf("@interface") != -1) {
+                isInterface = true;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return isInterface;
+    }
+
+    static boolean isJSFile(VirtualFile child) {
+        return child.getExtension() != null && child.getExtension().equals("js");
+    }
 }

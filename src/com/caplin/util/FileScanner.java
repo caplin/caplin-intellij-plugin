@@ -1,9 +1,7 @@
 package com.caplin.util;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.vfs.VirtualFile;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -20,14 +18,13 @@ public class FileScanner {
         if (e == null) {
             interfaces.add("dummy.grid.GridViewListener");
         } else {
-            interfaces = scanAndReturnInterfaces(e);
+            interfaces = scanAndReturnInterfaces(FileUtil.getVirtualFile(e));
         }
         return interfaces;
     }
 
-    private static ArrayList<String> scanAndReturnInterfaces(AnActionEvent e) {
+    private static ArrayList<String> scanAndReturnInterfaces(VirtualFile virtualFile) {
         ArrayList<String> interfaces = new ArrayList<String>();
-        VirtualFile virtualFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
         VirtualFile root = FileUtil.getApplicationRoot(virtualFile);
 
         if (root != null) {
@@ -39,28 +36,23 @@ public class FileScanner {
     }
 
     private static void collectInterfaces(VirtualFile file, ArrayList<String> interfaces) {
-        VirtualFile[] children = file.getChildren();
-        for (int i = 0, l = children.length; i < l; i++) {
-            if (!children[i].isDirectory()) {
-                addIfInterface(children[i], interfaces);
-            } else {
-                collectInterfaces(children[i], interfaces);
+        if (file != null) {
+            VirtualFile[] children = file.getChildren();
+            for (int i = 0, l = children.length; i < l; i++) {
+                if (!children[i].isDirectory()) {
+                    addIfInterface(children[i], interfaces);
+                } else {
+                    collectInterfaces(children[i], interfaces);
+                }
             }
         }
+
     }
 
     private static void addIfInterface(VirtualFile child, ArrayList<String> interfaces) {
-        if (child.getExtension() != null && child.getExtension().equals("js")) {
-            try {
-                String contents = new String(child.contentsToByteArray());
-                if (contents.indexOf("@interface") != -1) {
-                    interfaces.add(FileUtil.getNameSpace(child) + child.getNameWithoutExtension());
-                }
-            } catch (IOException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
+        if (FileUtil.isJSFile(child) && FileUtil.isInterface(child)) {
+            interfaces.add(FileUtil.getNameSpace(child) + child.getNameWithoutExtension());
         }
     }
-
 
 }
