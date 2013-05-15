@@ -1,11 +1,8 @@
 package com.caplin;
 
+import com.caplin.util.FileUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.vfs.VirtualFile;
-import org.apache.commons.lang.CharUtils;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,83 +14,7 @@ import org.apache.commons.lang.CharUtils;
 abstract class CaplinAction extends AnAction {
 
     public void update(AnActionEvent e) {
-        VirtualFile virtualFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
-        e.getPresentation().setEnabled(isCaplinApp(virtualFile));
-    }
-
-    private boolean isCaplinApp(VirtualFile virtualFile) {
-        VirtualFile parent = virtualFile.getParent();
-
-        boolean hasSrc = false;
-        boolean hasApps = false;
-
-        while (parent != null) {
-            if (parent.getName().equals("src")) hasSrc = true;
-            if (parent.getName().equals("apps")) hasApps = true;
-
-            if (hasSrc && hasApps) {
-                return true;
-            }
-
-            parent = parent.getParent();
-        }
-
-        return false;
-    }
-
-    protected String getNameSpace(VirtualFile virtualFile) {
-        String namespace = "";
-        VirtualFile parent = virtualFile.getParent();
-
-        while (parent != null && !parent.getName().equals("src")) {
-            namespace = parent.getName() + "." + namespace;
-            parent = parent.getParent();
-        }
-
-        return namespace;
-    }
-
-    protected String getFullClass(AnActionEvent e) {
-        VirtualFile virtualFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
-        return getNameSpace(virtualFile) + virtualFile.getNameWithoutExtension();
-    }
-
-    protected int getConstructorEndOffsetFromEvent(AnActionEvent e) {
-        Editor editor = e.getData(PlatformDataKeys.EDITOR);
-        String text = editor.getDocument().getText();
-        return getConstructorEndOffsetFromText(text);
-    }
-
-    protected int getConstructorEndOffsetFromText(String text) {
-        int brackets = 0;
-        boolean started = false;
-        boolean ignoringComments = false;
-
-        for (int i = 0; i < text.length(); i++){
-            char character = text.charAt(i);
-            if (!ignoringComments && character == '{') {
-                brackets++;
-                started = true;
-            } else if (!ignoringComments && character == '}') {
-                brackets--;
-                if (started) {
-                    if (brackets == 0) {
-                        if (text.charAt(i+1) == ';') {
-                            return i+2;
-                        } else {
-                            return i+1;
-                        }
-                    }
-                }
-            }  else if (character == '/' && text.charAt(i+1) == '*') {
-                i = i + 1;
-                ignoringComments = true;
-            } else if (character == '*' && text.charAt(i+1) == '/') {
-                i = i + 1;
-                ignoringComments = false;
-            }
-        }
-        return 0;
+        e.getPresentation().setEnabled(FileUtil.isCaplinApp(e));
     }
 
 }

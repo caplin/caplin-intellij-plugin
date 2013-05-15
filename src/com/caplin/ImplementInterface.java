@@ -4,11 +4,11 @@ import com.caplin.forms.ChooseInterface;
 import com.caplin.listener.SelectionListener;
 import com.caplin.util.DocEditor;
 import com.caplin.util.FileScanner;
+import com.caplin.util.FileUtil;
 import com.caplin.util.Runner;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.psi.*;
@@ -33,12 +33,12 @@ public class ImplementInterface extends CaplinAction implements SelectionListene
         dialog.setVisible(true);
     }
 
-    private void writeInterfaceDeclaration(AnActionEvent e, String interfaces) {
+    private void writeInterfaceDeclaration(AnActionEvent e, String interfaces, String selection) {
         PsiFile file = e.getData(LangDataKeys.PSI_FILE);
-        PsiElement constructor = getConstructor(file);
-        ASTNode elem = getElement("caplin.implement(" + getFullClass(e) + ", );", e);
+        PsiElement constructor = FileUtil.getConstructorFromPsiFile(file);
+        ASTNode elem = FileUtil.createASTNodeFromText(e, "caplin.implement(" + FileUtil.getFullClass(FileUtil.getVirtualFile(e)) + ", " + selection + ");");
 
-        PsiElement newline = getElement("\n", e).getPsi();
+        PsiElement newline = FileUtil.createASTNodeFromText(e, "\n").getPsi();
         PsiElement added = file.addAfter(elem.getPsi(), constructor);
 
         if (!added.getPrevSibling().getText().equals("\n")) {
@@ -52,47 +52,32 @@ public class ImplementInterface extends CaplinAction implements SelectionListene
         DocEditor.appendString(e, interfaces);
     }
 
-    private PsiElement getConstructor(PsiElement file) {
-        PsiElement[] list = file.getChildren();
-        for (int i = 0, l = list.length; i < l; i++) {
-            if (list[i].getText().indexOf("function") != -1) {
-                return list[i];
-            }
-        }
-        return list[0];
-    }
-
-    private ASTNode getElement(String code, AnActionEvent e) {
-        return JSElementFactory.createElementFromText(e.getProject(), code);
-    }
-
     @Override
     public void onSelected(String selection) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        String filePath = selection.replace('.', '/');
+        VirtualFile root = FileUtil.getApplicationRoot(this.event.getData(PlatformDataKeys.VIRTUAL_FILE));
 
-        String path = selection.replace('.', '/');
-
-        VirtualFile root = FileScanner.getRoot(this.event.getData(PlatformDataKeys.VIRTUAL_FILE));
-
-        if (path.indexOf("caplin") == 0) {
-            VirtualFile interfaceToPass = root.findFileByRelativePath("sdk/libs/javascript/caplin/src/" + path + ".js");
-            writeInterface(interfaceToPass, this.event);
+        if (filePath.indexOf("caplin") == 0) {
+            VirtualFile interfaceToPass = root.findFileByRelativePath("sdk/libs/javascript/caplin/src/" + filePath + ".js");
+            writeInterface(interfaceToPass, selection, this.event);
         } else {
-
+            //TODO: Support client interfaces
         }
     }
 
-    private void writeInterface(VirtualFile interfaceToPass, final AnActionEvent event) {
+    private void writeInterface(VirtualFile interfaceToPass, final String selection, final AnActionEvent event) {
 
         try {
             String contents = new String(interfaceToPass.contentsToByteArray());
-            int constructorEnd = getConstructorEndOffsetFromText(contents);
-            final String interfaces = contents.substring(constructorEnd, contents.length()).replace("\r\n", "\n");
+            int constructorEnd = FileUtil.getConstructorEndOffsetFromText(contents);
+            final String interfaces = contents.substring(constructorEnd, contents.length()).replace("\r\n", "\n").replace(selection, FileUtil.getFullClass(this.event.getData(PlatformDataKeys.VIRTUAL_FILE)));
+
+
             // PsiFile file = e.getData(LangDataKeys.PSI_FILE);
 
             Runner.runWriteCommand(this.event.getProject(), new Runnable() {
                 public void run() {
-                    writeInterfaceDeclaration(event, interfaces);
+                    writeInterfaceDeclaration(event, interfaces, selection);
                 }
             });
         } catch (IOException e) {

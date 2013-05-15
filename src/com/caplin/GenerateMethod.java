@@ -1,7 +1,7 @@
 package com.caplin;
 
 import com.caplin.util.DocEditor;
-import com.intellij.openapi.actionSystem.AnAction;
+import com.caplin.util.FileUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 
 /**
@@ -13,7 +13,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
  */
 public class GenerateMethod extends CaplinAction {
     public void actionPerformed(AnActionEvent e) {
-        StringBuilder builder = new StringBuilder("\n\n" + getFullClass(e) + ".prototype.method = new function(){\n}");
+        StringBuilder builder = new StringBuilder("\n\n" + FileUtil.getFullClass(FileUtil.getVirtualFile(e)) + ".prototype.method = new function(){\n}");
         DocEditor.appendString(e, builder.toString());
     }
 }

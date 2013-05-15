@@ -3,7 +3,6 @@ package com.caplin.util;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.vfs.VirtualFile;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -20,8 +19,6 @@ public class FileScanner {
         ArrayList<String> interfaces = new ArrayList<String>();
         if (e == null) {
             interfaces.add("dummy.grid.GridViewListener");
-            interfaces.add("dummy.chart.ChartViewListener");
-            interfaces.add("dummy.grid.ColumnModelListener");
         } else {
             interfaces = scanAndReturnInterfaces(e);
         }
@@ -31,7 +28,7 @@ public class FileScanner {
     private static ArrayList<String> scanAndReturnInterfaces(AnActionEvent e) {
         ArrayList<String> interfaces = new ArrayList<String>();
         VirtualFile virtualFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
-        VirtualFile root = getRoot(virtualFile);
+        VirtualFile root = FileUtil.getApplicationRoot(virtualFile);
 
         if (root != null) {
             collectInterfaces(root.findChild("apps"), interfaces);
@@ -57,35 +54,12 @@ public class FileScanner {
             try {
                 String contents = new String(child.contentsToByteArray());
                 if (contents.indexOf("@interface") != -1) {
-                    interfaces.add(getNameSpace(child) + child.getNameWithoutExtension());
+                    interfaces.add(FileUtil.getNameSpace(child) + child.getNameWithoutExtension());
                 }
             } catch (IOException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
         }
-    }
-
-    protected static String getNameSpace(VirtualFile virtualFile) {
-        String namespace = "";
-        VirtualFile parent = virtualFile.getParent();
-
-        while (parent != null && !parent.getName().equals("src")) {
-            namespace = parent.getName() + "." + namespace;
-            parent = parent.getParent();
-        }
-
-        return namespace;
-    }
-
-    public static VirtualFile getRoot(VirtualFile file) {
-       VirtualFile parent = file.getParent();
-       while (parent != null) {
-            if (parent.findChild("sdk") != null && parent.findChild("apps") != null) {
-                return parent;
-            }
-            parent = parent.getParent();
-       };
-       return null;
     }
 
 

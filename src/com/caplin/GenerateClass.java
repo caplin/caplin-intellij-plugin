@@ -1,6 +1,7 @@
 package com.caplin;
 
 import com.caplin.util.DocEditor;
+import com.caplin.util.FileUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 
 /**
@@ -13,8 +14,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 public class GenerateClass extends CaplinAction {
 
     public void actionPerformed(final AnActionEvent e) {
-        StringBuilder builder = new StringBuilder(getFullClass(e) + " = function() {\n}");
-        builder.append("\n\n" + getFullClass(e) + ".prototype.method = new function(){}");
+        String fullClass = FileUtil.getFullClass(e);
+        StringBuilder builder = new StringBuilder(fullClass + " = function() {\n}");
+        builder.append("\n\n" + fullClass + ".prototype.method = new function(){}");
         DocEditor.insertString(e, builder.toString());
     }
 
