@@ -1,11 +1,11 @@
 package com.caplin.forms;
 
+import com.caplin.filter.FilterChain;
 import com.caplin.listener.SelectionListener;
 
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class ChooseInterface extends JDialog implements KeyListener {
     private JPanel contentPane;
@@ -15,6 +15,7 @@ public class ChooseInterface extends JDialog implements KeyListener {
     private JTextField searchField;
     private ArrayList<String> interfaces;
     private SelectionListener listener;
+
     public ChooseInterface(ArrayList<String> interfaces, SelectionListener listener) {
         this.listener = listener;
         this.interfaces = interfaces;
@@ -73,61 +74,13 @@ public class ChooseInterface extends JDialog implements KeyListener {
     }
 
     private void filterList() {
-        String currentValue = searchField.getText().trim().toLowerCase();
-        String regex = ".*";
-        for (int i = 0; i < currentValue.length(); i++){
-            char c = currentValue.charAt(i);
-            regex = regex + c + ".*";
-        }
 
-        ArrayList<Match> matches = new ArrayList<Match>();
-
-        for (int i = 0, l = interfaces.size(); i < l; i++) {
-            if (interfaces.get(i).toLowerCase().matches(regex)) {
-                matches.add(new Match(interfaces.get(i), 0));
-            }
-        }
-
-        for (int loop = 2, length = currentValue.length(); loop < length; loop++) {
-            ArrayList<String> parts = getParts(currentValue, loop);
-
-            for (int i = 0, l = matches.size(); i < l; i = i + 1) {
-                Match match = matches.get(i);
-                String matchName = match.getName().toLowerCase();
-
-                for (int lc = 0, pl = parts.size(); lc < pl; lc++)     {
-                    if (matchName.matches(".*" + parts.get(lc) + ".*")) {
-                        match.increaseRating(pl * 100);
-                    };
-                }
-            }
-        }
-
-        Collections.sort(matches);
-
-
-        String[] sorted = new String[matches.size()];
-        int count = 0;
-        for (Match match : matches) {
-            sorted[count] = match.getName();
-            count++;
-        }
-
-        interfacelist.setListData(sorted);
+        String searchFor = searchField.getText().trim().toLowerCase();
+        ArrayList<String> listToSearch = interfaces;
+        FilterChain filterChain = new FilterChain();
+        String[] filteredAndSortedList = filterChain.run(searchFor, listToSearch);
+        interfacelist.setListData(filteredAndSortedList);
     }
-
-    private ArrayList<String> getParts(String currentValue, int sectionLength) {
-        ArrayList<String> parts = new ArrayList<String>();
-        for (int i = 0, l = currentValue.length(); i + sectionLength < l; i++) {
-            try {
-                parts.add(currentValue.substring(i, sectionLength));
-            } catch (Exception e) {
-
-            }
-
-        }
-        return parts;
-    };
 
     @Override
     public void keyPressed(KeyEvent e) {

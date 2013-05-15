@@ -7,7 +7,6 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-
 import java.io.IOException;
 
 /**
@@ -106,12 +105,19 @@ public class FileUtil {
 
     public static PsiElement getConstructorFromPsiFile(PsiElement file) {
         PsiElement[] list = file.getChildren();
+
         for (int i = 0, l = list.length; i < l; i++) {
             if (list[i].getText().indexOf("function") != -1) {
                 return list[i];
             }
         }
-        return list[0];
+
+        if (list.length > 0) {
+            return list[0];
+        } else {
+            return null;
+        }
+
     }
 
     public static ASTNode createASTNodeFromText(AnActionEvent e, String code) {

@@ -39,13 +39,19 @@ public class ImplementInterface extends CaplinAction implements SelectionListene
         ASTNode elem = FileUtil.createASTNodeFromText(e, "caplin.implement(" + FileUtil.getFullClass(FileUtil.getVirtualFile(e)) + ", " + selection + ");");
 
         PsiElement newline = FileUtil.createASTNodeFromText(e, "\n").getPsi();
-        PsiElement added = file.addAfter(elem.getPsi(), constructor);
+        PsiElement added;
 
-        if (!added.getPrevSibling().getText().equals("\n")) {
+        if (constructor != null) {
+            added = file.addAfter(elem.getPsi(), constructor);
+        } else {
+            added = file.add(elem.getPsi());
+        }
+
+        if (added.getPrevSibling() != null && !added.getPrevSibling().getText().equals("\n")) {
             file.addBefore(newline, added);
         }
 
-        if (!added.getNextSibling().getText().equals("\n")) {
+        if (added.getNextSibling() != null && !added.getNextSibling().getText().equals("\n")) {
             file.addAfter(newline, added);
         }
 
