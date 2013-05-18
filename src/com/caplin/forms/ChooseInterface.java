@@ -1,6 +1,9 @@
 package com.caplin.forms;
 
 import com.caplin.filter.FilterChain;
+import com.caplin.filter.MatchList;
+import com.caplin.filter.filters.IncludesAllCharactersInOrder;
+import com.caplin.filter.filters.WeightByCharacterGrouping;
 import com.caplin.listener.SelectionListener;
 
 import javax.swing.*;
@@ -8,6 +11,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
 public class ChooseInterface extends JDialog implements KeyListener {
+    private final FilterChain filterChain;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -20,6 +24,11 @@ public class ChooseInterface extends JDialog implements KeyListener {
         this.listener = listener;
         this.interfaces = interfaces;
         interfacelist.setListData(this.interfaces.toArray());
+
+        this.filterChain = new FilterChain();
+        this.filterChain.addFilter(new IncludesAllCharactersInOrder());
+        this.filterChain.addFilter(new WeightByCharacterGrouping());
+
 
         setContentPane(contentPane);
         setModal(true);
@@ -74,12 +83,9 @@ public class ChooseInterface extends JDialog implements KeyListener {
     }
 
     private void filterList() {
-
         String searchFor = searchField.getText().trim().toLowerCase();
-        ArrayList<String> listToSearch = interfaces;
-        FilterChain filterChain = new FilterChain();
-        String[] filteredAndSortedList = filterChain.run(searchFor, listToSearch);
-        interfacelist.setListData(filteredAndSortedList);
+        ArrayList<String> filteredAndSortedList = this.filterChain.run(searchFor, interfaces);
+        interfacelist.setListData(filteredAndSortedList.toArray());
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.caplin.forms;
+package com.caplin.filter;
 
 /**
  * Created with IntelliJ IDEA.
