@@ -65,6 +65,11 @@ public class FileUtil {
         return getFullClass(getVirtualFile(event));
     }
 
+    /**
+     * Returns the end index of the constructor if one is found. If no constuctor is found then 0 is returned.
+     * @param text The JavaScript to scan
+     * @return
+     */
     public static int getConstructorEndOffsetFromText(String text) {
         int brackets = 0;
         boolean started = false;
@@ -79,7 +84,7 @@ public class FileUtil {
                 brackets--;
                 if (started) {
                     if (brackets == 0) {
-                        if (text.charAt(i+1) == ';') {
+                        if (i+1 < text.length() && text.charAt(i+1) == ';') {
                             return i+2;
                         } else {
                             return i+1;
