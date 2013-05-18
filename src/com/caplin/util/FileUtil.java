@@ -45,12 +45,17 @@ public class FileUtil {
         String namespace = "";
         VirtualFile parent = virtualFile.getParent();
 
-        while (parent != null && !parent.getName().equals("src")) {
-            namespace = parent.getName() + "." + namespace;
-            parent = parent.getParent();
+        while (parent != null) {
+            if (parent.getName().equals("src")) {
+                return namespace;
+            } else {
+                namespace = parent.getName() + "." + namespace;
+                parent = parent.getParent();
+            }
         }
 
-        return namespace;
+        // No src folder, do not try to build a namespace
+        return "";
     }
 
     public static VirtualFile getVirtualFile(AnActionEvent e) {

@@ -77,6 +77,52 @@ public class FileUtilTest {
     }
 
     @Test
+    public void getNamespace() {
+        /*
+        Setup mock application folders.
+         */
+        VirtualFile currentFile = mock(VirtualFile.class);
+        when(currentFile.getName()).thenReturn("file.js");
+
+        VirtualFile srcFolder = mock(VirtualFile.class);
+        when(srcFolder.getName()).thenReturn("src");
+
+        VirtualFile utilsFolder = mock(VirtualFile.class);
+        when(utilsFolder.getName()).thenReturn("utils");
+
+        VirtualFile componentFolder = mock(VirtualFile.class);
+        when(componentFolder.getName()).thenReturn("component");
+
+        VirtualFile bladesetFolder = mock(VirtualFile.class);
+        when(bladesetFolder.getName()).thenReturn("bladeset");
+
+        VirtualFile namespaceFolder = mock(VirtualFile.class);
+        when(namespaceFolder.getName()).thenReturn("caplin");
+
+        VirtualFile mydocumentsFolder = mock(VirtualFile.class);
+        when(mydocumentsFolder.getName()).thenReturn("mydocuments");
+
+
+        /*
+        Setup mock source tree and test.
+        mydocuments/src/caplin/bladeset/component/utils/file.js
+         */
+        when(currentFile.getParent()).thenReturn(utilsFolder);
+        when(utilsFolder.getParent()).thenReturn(componentFolder);
+        when(componentFolder.getParent()).thenReturn(bladesetFolder);
+        when(bladesetFolder.getParent()).thenReturn(namespaceFolder);
+        when(namespaceFolder.getParent()).thenReturn(srcFolder);
+        when(srcFolder.getParent()).thenReturn(mydocumentsFolder);
+        assertEquals("caplin.bladeset.component.utils.", FileUtil.getNameSpace(currentFile));
+
+        /*
+        Return empty string when no src folder is found
+         */
+        when(namespaceFolder.getParent()).thenReturn(null);
+        assertEquals("", FileUtil.getNameSpace(currentFile));
+    }
+
+    @Test
     public void getConstructorEndOffsetFromTextReturnsZeroIfNoConstructorPresent() {
         String javascript = "";
         assertEquals(0, FileUtil.getConstructorEndOffsetFromText(javascript));
