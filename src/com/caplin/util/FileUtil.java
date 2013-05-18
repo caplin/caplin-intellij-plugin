@@ -107,6 +107,10 @@ public class FileUtil {
         return 0;
     }
 
+    /*
+    Get the constructor element from the PsiFile. If no constructor is found just return the first
+    javascript block.
+     */
     public static PsiElement getConstructorFromPsiFile(PsiElement file) {
         PsiElement[] list = file.getChildren();
 

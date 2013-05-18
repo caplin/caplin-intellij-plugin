@@ -4,14 +4,12 @@ import com.caplin.util.FileUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiElement;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 
@@ -77,12 +75,13 @@ public class FileUtilTest {
     }
 
     @Test
-    public void getNamespace() {
+    public void getNamespaceAndFullClass() {
         /*
         Setup mock application folders.
          */
         VirtualFile currentFile = mock(VirtualFile.class);
-        when(currentFile.getName()).thenReturn("file.js");
+        when(currentFile.getName()).thenReturn("File.js");
+        when(currentFile.getNameWithoutExtension()).thenReturn("File");
 
         VirtualFile srcFolder = mock(VirtualFile.class);
         when(srcFolder.getName()).thenReturn("src");
@@ -114,12 +113,14 @@ public class FileUtilTest {
         when(namespaceFolder.getParent()).thenReturn(srcFolder);
         when(srcFolder.getParent()).thenReturn(mydocumentsFolder);
         assertEquals("caplin.bladeset.component.utils.", FileUtil.getNameSpace(currentFile));
+        assertEquals("caplin.bladeset.component.utils.File", FileUtil.getFullClass(currentFile));
 
         /*
         Return empty string when no src folder is found
          */
         when(namespaceFolder.getParent()).thenReturn(null);
         assertEquals("", FileUtil.getNameSpace(currentFile));
+        assertEquals("File", FileUtil.getFullClass(currentFile));
     }
 
     @Test
@@ -157,5 +158,57 @@ public class FileUtilTest {
         javascript = "caplin.thirdparty('bob');\n/*a comment here*/\nvar bob = function(){ some more code \n in here \n};";
         assertEquals(95, FileUtil.getConstructorEndOffsetFromText(javascript));
     }
+
+    @Test
+    public void getFileFromEvent() {
+        VirtualFile currentFile = mock(VirtualFile.class);
+        AnActionEvent event = mock(AnActionEvent.class);
+        when(event.getData(PlatformDataKeys.VIRTUAL_FILE)).thenReturn(currentFile);
+        assertEquals(currentFile, FileUtil.getVirtualFile(event));
+    };
+
+    @Test
+    public void getConstructorFromPsiFile() {
+        PsiElement PsiFile = mock(PsiElement.class);
+        PsiElement[] children = new PsiElement[4];
+
+        PsiElement comment = mock(PsiElement.class);
+        when(comment.getText()).thenReturn("/* A comment */\n");
+
+        PsiElement thirdpartyInclude = mock(PsiElement.class);
+        when(thirdpartyInclude.getText()).thenReturn("caplin.thirdparty('JQuery');\n");
+
+        PsiElement constructor = mock(PsiElement.class);
+        when(constructor.getText()).thenReturn("mock.constructor = function(){};\n");
+
+        children[0] = comment;
+        children[1] = thirdpartyInclude;
+        children[2] = comment;
+        children[3] = constructor;
+
+        when(PsiFile.getChildren()).thenReturn(children);
+
+        assertEquals(constructor, FileUtil.getConstructorFromPsiFile(PsiFile));
+
+        /*
+        Check null is returned if no constructor exists.
+         */
+        children[0] = thirdpartyInclude;
+        children[1] = comment;
+        children[2] = comment;
+        children[3] = comment;
+        assertEquals("The first element should be returned if no constructor is found", thirdpartyInclude, FileUtil.getConstructorFromPsiFile(PsiFile));
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 }
