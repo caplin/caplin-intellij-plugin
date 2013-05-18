@@ -157,7 +157,7 @@ public class FileUtil {
         return isInterface;
     }
 
-    public static boolean isJSFile(VirtualFile child) {
-        return child.getExtension() != null && child.getExtension().equals("js");
+    public static boolean isJSFile(VirtualFile file) {
+        return file != null && file.getExtension() != null && file.getExtension().equals("js");
     }
 }

@@ -259,6 +259,22 @@ public class FileUtilTest {
         assertFalse(FileUtil.isInterface(file));
     };
 
+    @Test
+    public void isJSFile() throws IOException {
+        VirtualFile file = mock(VirtualFile.class);
+        when(file.getExtension()).thenReturn("js");
+        assertTrue(FileUtil.isJSFile(file));
+
+        when(file.getExtension()).thenReturn("txt");
+        assertFalse(FileUtil.isJSFile(file));
+
+        /*
+        Test null
+         */
+        assertFalse(FileUtil.isJSFile(null));
+    };
+
+
 
 
 
