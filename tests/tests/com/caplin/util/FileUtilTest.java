@@ -117,6 +117,10 @@ public class FileUtilTest {
         assertEquals("caplin.bladeset.component.utils.", FileUtil.getNameSpace(currentFile));
         assertEquals("caplin.bladeset.component.utils.File", FileUtil.getFullClass(currentFile));
 
+        AnActionEvent event = mock(AnActionEvent.class);
+        when(event.getData(PlatformDataKeys.VIRTUAL_FILE)).thenReturn(currentFile);
+        assertEquals("caplin.bladeset.component.utils.File", FileUtil.getFullClass(event));
+
         /*
         Return empty string when no src folder is found
          */
@@ -200,6 +204,11 @@ public class FileUtilTest {
         children[2] = comment;
         children[3] = comment;
         assertEquals("The first element should be returned if no constructor is found", thirdpartyInclude, FileUtil.getConstructorFromPsiFile(PsiFile));
+
+
+        PsiElement[] emptyFile = new PsiElement[0];
+        when(PsiFile.getChildren()).thenReturn(emptyFile);
+        assertNull("If the file is empty then return null", FileUtil.getConstructorFromPsiFile(PsiFile));
     }
 
     @Test

@@ -2,6 +2,8 @@ package com.caplin.util;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.vfs.VirtualFile;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -50,8 +52,12 @@ public class FileScanner {
     }
 
     private static void addIfInterface(VirtualFile child, ArrayList<String> interfaces) {
-        if (FileUtil.isJSFile(child) && FileUtil.isInterface(child)) {
-            interfaces.add(FileUtil.getNameSpace(child) + child.getNameWithoutExtension());
+        try {
+            if (FileUtil.isJSFile(child) && FileUtil.isInterface(child)) {
+                interfaces.add(FileUtil.getNameSpace(child) + child.getNameWithoutExtension());
+            }
+        } catch (IOException e) {
+            // If there is a file error, simply do not add the interface
         }
     }
 

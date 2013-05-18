@@ -139,20 +139,16 @@ public class FileUtil {
                 return parent;
             }
             parent = parent.getParent();
-       };
+       }
        return null;
     }
 
-    public static boolean isInterface(VirtualFile file) {
+    public static boolean isInterface(VirtualFile file) throws IOException {
         String contents = null;
         Boolean isInterface = false;
-        try {
-            contents = new String(file.contentsToByteArray());
-            if (contents.indexOf("@interface") != -1) {
-                isInterface = true;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        contents = new String(file.contentsToByteArray());
+        if (contents.contains("@interface")) {
+            isInterface = true;
         }
         return isInterface;
     }
