@@ -8,8 +8,10 @@ import com.intellij.psi.PsiElement;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import tests.util.FolderTreeUtility;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -23,45 +25,29 @@ public class FileUtilTest {
         /*
         Setup mock application folders.
          */
-        VirtualFile currentFile = mock(VirtualFile.class);
-        when(currentFile.getName()).thenReturn("file.js");
+        HashMap<String,VirtualFile> virtualFilesFromTree =
+                FolderTreeUtility.getVirtualFilesFromTree("my documents/apps/bladeset/src/file.js");
 
-        VirtualFile srcParent = mock(VirtualFile.class);
-        when(srcParent.getName()).thenReturn("src");
-
-        VirtualFile bladesetParent = mock(VirtualFile.class);
-        when(bladesetParent.getName()).thenReturn("bladeset");
-
-        VirtualFile appsParent = mock(VirtualFile.class);
-        when(appsParent.getName()).thenReturn("apps");
-
-        VirtualFile nonCaplinParent = mock(VirtualFile.class);
-        when(nonCaplinParent.getName()).thenReturn("my documents");
+        VirtualFile currentFile = virtualFilesFromTree.get("file.js");
+        VirtualFile nonCaplinParent = virtualFilesFromTree.get("my documents");
+        VirtualFile srcFile = virtualFilesFromTree.get("src");
 
         AnActionEvent event = mock(AnActionEvent.class);
         when(event.getData(PlatformDataKeys.VIRTUAL_FILE)).thenReturn(currentFile);
 
-        /*
-        Setup mock source tree and test.
-        my documents/apps/bladeset/src/file.js
-         */
-        when(currentFile.getParent()).thenReturn(srcParent);
-        when(srcParent.getParent()).thenReturn(bladesetParent);
-        when(bladesetParent.getParent()).thenReturn(appsParent);
-        when(appsParent.getParent()).thenReturn(nonCaplinParent);
         assertTrue("The file is in a caplin app if there are both src and apps folders in the tree", FileUtil.isCaplinApp(currentFile));
         assertTrue("Virtual file not retrieved from the AnActionEvent correctly", FileUtil.isCaplinApp(event));
 
         /*
-        Setup mock source tree and test.
+        Modify the mock tree so that there is no apps folder
         my documents/src/file.js
          */
-        when(currentFile.getParent()).thenReturn(srcParent);
-        when(srcParent.getParent()).thenReturn(nonCaplinParent);
+        when(currentFile.getParent()).thenReturn(srcFile);
+        when(srcFile.getParent()).thenReturn(nonCaplinParent);
         assertFalse("Both src and apps folders should be present if this is a caplin app", FileUtil.isCaplinApp(currentFile));
 
         /*
-        Setup mock source tree and test.
+        Modify current tree so that there are no apps or src folders
         my documents/file.js
          */
         when(currentFile.getParent()).thenReturn(nonCaplinParent);

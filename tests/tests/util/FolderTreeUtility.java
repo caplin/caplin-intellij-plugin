@@ -33,6 +33,7 @@ public class FolderTreeUtility {
 
                     VirtualFile virtualFile = mock(VirtualFile.class);
                     files.put(file, virtualFile);
+                    when(virtualFile.getName()).thenReturn(file);
 
                     boolean bIsDirectory = !file.contains(".");
                     when(virtualFile.isDirectory()).thenReturn(bIsDirectory);
@@ -46,7 +47,6 @@ public class FolderTreeUtility {
                         VirtualFile parent = files.get(pathArray[pathCount - 1]);
                         when(virtualFile.getParent()).thenReturn(parent);
                         when(parent.findChild(file)).thenReturn(virtualFile);
-                        when(virtualFile.getName()).thenReturn(file);
 
                         VirtualFile[] children = fileToChildren.get(parent.getName());
                         if (children == null) {
