@@ -102,12 +102,6 @@ public class FileUtil {
         return 0;
     }
 
-    protected static int getConstructorEndOffsetFromEvent(AnActionEvent e) {
-        Editor editor = e.getData(PlatformDataKeys.EDITOR);
-        String text = editor.getDocument().getText();
-        return getConstructorEndOffsetFromText(text);
-    }
-
     public static PsiElement getConstructorFromPsiFile(PsiElement file) {
         PsiElement[] list = file.getChildren();
 
