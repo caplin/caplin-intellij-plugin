@@ -9,6 +9,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.io.IOException;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -244,6 +246,18 @@ public class FileUtilTest {
         assertEquals(null, FileUtil.getApplicationRoot(currentFile));
     }
 
+    @Test
+    public void isInterface() throws IOException {
+        VirtualFile file = mock(VirtualFile.class);
+        when(file.contentsToByteArray()).thenReturn("/* \n @interface \n */ \n bob = function(){};".getBytes());
+        assertTrue(FileUtil.isInterface(file));
+
+        when(file.contentsToByteArray()).thenReturn("bob = function(){};".getBytes());
+        assertFalse(FileUtil.isInterface(file));
+
+        when(file.contentsToByteArray()).thenReturn("".getBytes());
+        assertFalse(FileUtil.isInterface(file));
+    };
 
 
 

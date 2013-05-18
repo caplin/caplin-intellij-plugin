@@ -143,7 +143,7 @@ public class FileUtil {
        return null;
     }
 
-    static boolean isInterface(VirtualFile file) {
+    public static boolean isInterface(VirtualFile file) {
         String contents = null;
         Boolean isInterface = false;
         try {
@@ -157,7 +157,7 @@ public class FileUtil {
         return isInterface;
     }
 
-    static boolean isJSFile(VirtualFile child) {
+    public static boolean isJSFile(VirtualFile child) {
         return child.getExtension() != null && child.getExtension().equals("js");
     }
 }
