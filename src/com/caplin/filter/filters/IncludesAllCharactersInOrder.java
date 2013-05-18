@@ -18,6 +18,7 @@ public class IncludesAllCharactersInOrder implements Filter {
         /*
         Filter chain 1: Ensure all characters are present and in the correct order
          */
+        searchFor = searchFor.trim();
         String regex = ".*";
         for (int i = 0; i < searchFor.length(); i++){
             char c = searchFor.charAt(i);
