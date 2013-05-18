@@ -5,6 +5,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.ScrollType;
+import com.intellij.psi.PsiDocumentManager;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,6 +14,8 @@ import com.intellij.openapi.editor.ScrollType;
 public class DocEditor {
 
     public static void insertString(final AnActionEvent e, final String string) {
+        PsiDocumentManager.getInstance(e.getProject()).doPostponedOperationsAndUnblockDocument(e.getData(PlatformDataKeys.EDITOR).getDocument());
+
         Runner.runWriteCommand(e.getProject(), new Runnable() {
             public void run() {
                 Editor editor = e.getData(PlatformDataKeys.EDITOR);
@@ -24,11 +27,15 @@ public class DocEditor {
     }
 
     public static void appendString(final AnActionEvent e, final String string) {
+        PsiDocumentManager.getInstance(e.getProject()).doPostponedOperationsAndUnblockDocument(e.getData(PlatformDataKeys.EDITOR).getDocument());
+
         Editor editor = e.getData(PlatformDataKeys.EDITOR);
         insertStringAt(e, editor.getDocument().getTextLength(), string );
     }
 
     public static void insertStringAt(final AnActionEvent e, final int offset, final String string) {
+        PsiDocumentManager.getInstance(e.getProject()).doPostponedOperationsAndUnblockDocument(e.getData(PlatformDataKeys.EDITOR).getDocument());
+
         Runner.runWriteCommand(e.getProject(), new Runnable() {
             public void run() {
                 Editor editor = e.getData(PlatformDataKeys.EDITOR);

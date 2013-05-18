@@ -3,6 +3,7 @@ package com.caplin.util;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiDocumentManager;
 
 public class Runner
 {

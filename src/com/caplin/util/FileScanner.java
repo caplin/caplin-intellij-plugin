@@ -20,14 +20,14 @@ public class FileScanner {
         if (e == null) {
             interfaces.add("dummy.grid.GridViewListener");
         } else {
-            interfaces = scanAndReturnInterfaces(FileUtil.getVirtualFile(e));
+            interfaces = scanAndReturnInterfaces(e);
         }
         return interfaces;
     }
 
-    private static ArrayList<String> scanAndReturnInterfaces(VirtualFile virtualFile) {
+    private static ArrayList<String> scanAndReturnInterfaces(AnActionEvent e) {
         ArrayList<String> interfaces = new ArrayList<String>();
-        VirtualFile root = FileUtil.getApplicationRoot(virtualFile);
+        VirtualFile root = FileUtil.getApplicationRoot(e);
 
         if (root != null) {
             collectInterfaces(root.findChild("apps"), interfaces);

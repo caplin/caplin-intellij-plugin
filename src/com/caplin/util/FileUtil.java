@@ -143,6 +143,10 @@ public class FileUtil {
        return null;
     }
 
+    public static VirtualFile getApplicationRoot(AnActionEvent event) {
+        return getApplicationRoot(getVirtualFile(event));
+    }
+
     public static boolean isInterface(VirtualFile file) throws IOException {
         String contents = null;
         Boolean isInterface = false;
