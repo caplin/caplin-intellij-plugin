@@ -200,6 +200,50 @@ public class FileUtilTest {
         assertEquals("The first element should be returned if no constructor is found", thirdpartyInclude, FileUtil.getConstructorFromPsiFile(PsiFile));
     }
 
+    @Test
+    public void getApplicationRoot() {
+
+        VirtualFile currentFile = mock(VirtualFile.class);
+
+        VirtualFile srcFolder = mock(VirtualFile.class);
+        when(srcFolder.getName()).thenReturn("src");
+
+        VirtualFile utilsFolder = mock(VirtualFile.class);
+        when(utilsFolder.getName()).thenReturn("utils");
+
+        VirtualFile appsFolder = mock(VirtualFile.class);
+        when(appsFolder.getName()).thenReturn("apps");
+
+        VirtualFile sdkFolder = mock(VirtualFile.class);
+        when(sdkFolder.getName()).thenReturn("sdk");
+
+        VirtualFile caplinFolder = mock(VirtualFile.class);
+        when(caplinFolder.getName()).thenReturn("caplin");
+
+
+        /*
+        Setup mock source tree and test.
+        CaplinTrader/utils/file.js
+        CaplinTrader/apps
+        CaplinTrader/sdk
+         */
+        when(currentFile.getParent()).thenReturn(utilsFolder);
+        when(utilsFolder.getParent()).thenReturn(caplinFolder);
+
+        when(caplinFolder.findChild("apps")).thenReturn(appsFolder);
+        when(caplinFolder.findChild("sdk")).thenReturn(sdkFolder);
+
+        assertEquals(caplinFolder, FileUtil.getApplicationRoot(currentFile));
+
+        /*
+        Test no applicaton root found
+         */
+        when(caplinFolder.findChild("apps")).thenReturn(null);
+        when(caplinFolder.findChild("sdk")).thenReturn(null);
+
+        assertEquals(null, FileUtil.getApplicationRoot(currentFile));
+    }
+
 
 
 
