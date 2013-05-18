@@ -1,7 +1,6 @@
 package com.caplin.forms;
 
 import com.caplin.filter.FilterChain;
-import com.caplin.filter.MatchList;
 import com.caplin.filter.filters.IncludesAllCharactersInOrder;
 import com.caplin.filter.filters.WeightByCharacterGrouping;
 import com.caplin.listener.SelectionListener;
@@ -24,11 +23,11 @@ public class ChooseInterface extends JDialog implements KeyListener {
         this.listener = listener;
         this.interfaces = interfaces;
         interfacelist.setListData(this.interfaces.toArray());
+        setListIndex(0);
 
         this.filterChain = new FilterChain();
         this.filterChain.addFilter(new IncludesAllCharactersInOrder());
         this.filterChain.addFilter(new WeightByCharacterGrouping());
-
 
         setContentPane(contentPane);
         setModal(true);
@@ -71,12 +70,6 @@ public class ChooseInterface extends JDialog implements KeyListener {
         dispose();
     }
 
-    public static void main(String[] args) {
-//        ChooseInterface dialog = new ChooseInterface(com.caplin.util.FileScanner.getInterfaces(null);
-//        dialog.pack();
-//        dialog.setVisible(true);
-//        System.exit(0);0
-    }
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -86,6 +79,7 @@ public class ChooseInterface extends JDialog implements KeyListener {
         String searchFor = searchField.getText().trim().toLowerCase();
         ArrayList<String> filteredAndSortedList = this.filterChain.run(searchFor, interfaces);
         interfacelist.setListData(filteredAndSortedList.toArray());
+        setListIndex(0);
     }
 
     @Override
@@ -94,6 +88,29 @@ public class ChooseInterface extends JDialog implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        filterList();
+        if (e.getKeyCode() == 40) {
+            // Down arrow
+            moveList(1);
+        }
+        else if (e.getKeyCode() == 38) {
+            // Up arrow
+            moveList(-1);
+        } else {
+            filterList();
+        }
+
+    }
+
+    private void setListIndex(int index) {
+        int size = interfacelist.getModel().getSize();
+        if (size > 0 && index < size) {
+            interfacelist.setSelectedIndex(index);
+            interfacelist.ensureIndexIsVisible(interfacelist.getSelectedIndex());
+        };
+    }
+
+    private void moveList(int i) {
+        int newindex = interfacelist.getSelectedIndex() + i;
+        setListIndex(newindex);
     }
 }
