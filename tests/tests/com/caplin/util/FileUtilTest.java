@@ -64,42 +64,12 @@ public class FileUtilTest {
 
     @Test
     public void getNamespaceAndFullClass() {
-        /*
-        Setup mock application folders.
-         */
-        VirtualFile currentFile = mock(VirtualFile.class);
-        when(currentFile.getName()).thenReturn("File.js");
-        when(currentFile.getNameWithoutExtension()).thenReturn("File");
+        HashMap<String,VirtualFile> virtualFilesFromTree =
+                FolderTreeUtility.getVirtualFilesFromTree("mydocuments/src/caplin/bladeset/component/utils/File.js");
 
-        VirtualFile srcFolder = mock(VirtualFile.class);
-        when(srcFolder.getName()).thenReturn("src");
+        VirtualFile currentFile = virtualFilesFromTree.get("File.js");
+        VirtualFile namespaceFolder = virtualFilesFromTree.get("caplin");
 
-        VirtualFile utilsFolder = mock(VirtualFile.class);
-        when(utilsFolder.getName()).thenReturn("utils");
-
-        VirtualFile componentFolder = mock(VirtualFile.class);
-        when(componentFolder.getName()).thenReturn("component");
-
-        VirtualFile bladesetFolder = mock(VirtualFile.class);
-        when(bladesetFolder.getName()).thenReturn("bladeset");
-
-        VirtualFile namespaceFolder = mock(VirtualFile.class);
-        when(namespaceFolder.getName()).thenReturn("caplin");
-
-        VirtualFile mydocumentsFolder = mock(VirtualFile.class);
-        when(mydocumentsFolder.getName()).thenReturn("mydocuments");
-
-
-        /*
-        Setup mock source tree and test.
-        mydocuments/src/caplin/bladeset/component/utils/file.js
-         */
-        when(currentFile.getParent()).thenReturn(utilsFolder);
-        when(utilsFolder.getParent()).thenReturn(componentFolder);
-        when(componentFolder.getParent()).thenReturn(bladesetFolder);
-        when(bladesetFolder.getParent()).thenReturn(namespaceFolder);
-        when(namespaceFolder.getParent()).thenReturn(srcFolder);
-        when(srcFolder.getParent()).thenReturn(mydocumentsFolder);
         assertEquals("caplin.bladeset.component.utils.", FileUtil.getNameSpace(currentFile));
         assertEquals("caplin.bladeset.component.utils.File", FileUtil.getFullClass(currentFile));
 
@@ -199,36 +169,14 @@ public class FileUtilTest {
 
     @Test
     public void getApplicationRoot() {
+        HashMap<String,VirtualFile> virtualFilesFromTree =
+                FolderTreeUtility.getVirtualFilesFromTree(
+                        "CaplinTrader/utils/file.js," +
+                        "CaplinTrader/apps," +
+                        "CaplinTrader/sdk");
 
-        VirtualFile currentFile = mock(VirtualFile.class);
-
-        VirtualFile srcFolder = mock(VirtualFile.class);
-        when(srcFolder.getName()).thenReturn("src");
-
-        VirtualFile utilsFolder = mock(VirtualFile.class);
-        when(utilsFolder.getName()).thenReturn("utils");
-
-        VirtualFile appsFolder = mock(VirtualFile.class);
-        when(appsFolder.getName()).thenReturn("apps");
-
-        VirtualFile sdkFolder = mock(VirtualFile.class);
-        when(sdkFolder.getName()).thenReturn("sdk");
-
-        VirtualFile caplinFolder = mock(VirtualFile.class);
-        when(caplinFolder.getName()).thenReturn("caplin");
-
-
-        /*
-        Setup mock source tree and test.
-        CaplinTrader/utils/file.js
-        CaplinTrader/apps
-        CaplinTrader/sdk
-         */
-        when(currentFile.getParent()).thenReturn(utilsFolder);
-        when(utilsFolder.getParent()).thenReturn(caplinFolder);
-
-        when(caplinFolder.findChild("apps")).thenReturn(appsFolder);
-        when(caplinFolder.findChild("sdk")).thenReturn(sdkFolder);
+        VirtualFile currentFile = virtualFilesFromTree.get("file.js");
+        VirtualFile caplinFolder = virtualFilesFromTree.get("CaplinTrader");
 
         assertEquals(caplinFolder, FileUtil.getApplicationRoot(currentFile));
 
