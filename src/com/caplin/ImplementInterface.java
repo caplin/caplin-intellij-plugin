@@ -79,9 +79,6 @@ public class ImplementInterface extends CaplinAction implements SelectionListene
             int constructorEnd = FileUtil.getConstructorEndOffsetFromText(contents);
             final String interfaces = contents.substring(constructorEnd, contents.length()).replace("\r\n", "\n").replace(selection, FileUtil.getFullClass(this.event.getData(PlatformDataKeys.VIRTUAL_FILE)));
 
-
-            // PsiFile file = e.getData(LangDataKeys.PSI_FILE);
-
             Runner.runWriteCommand(this.event.getProject(), new Runnable() {
                 public void run() {
                     writeInterfaceDeclaration(event, interfaces, selection);
