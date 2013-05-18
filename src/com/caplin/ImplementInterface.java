@@ -36,15 +36,15 @@ public class ImplementInterface extends CaplinAction implements SelectionListene
     private void writeInterfaceDeclaration(AnActionEvent e, String interfaces, String selection) {
         PsiFile file = e.getData(LangDataKeys.PSI_FILE);
         PsiElement constructor = FileUtil.getConstructorFromPsiFile(file);
-        ASTNode elem = FileUtil.createASTNodeFromText(e, "caplin.implement(" + FileUtil.getFullClass(FileUtil.getVirtualFile(e)) + ", " + selection + ");");
+        PsiElement elem = FileUtil.createPsiElementFromText(e, "caplin.implement(" + FileUtil.getFullClass(FileUtil.getVirtualFile(e)) + ", " + selection + ");");
 
-        PsiElement newline = FileUtil.createASTNodeFromText(e, "\n").getPsi();
+        PsiElement newline = FileUtil.createPsiElementFromText(e, "\n");
         PsiElement added;
 
         if (constructor != null) {
-            added = file.addAfter(elem.getPsi(), constructor);
+            added = file.addAfter(elem, constructor);
         } else {
-            added = file.add(elem.getPsi());
+            added = file.add(elem);
         }
 
         if (added.getPrevSibling() != null && !added.getPrevSibling().getText().equals("\n")) {
@@ -55,6 +55,7 @@ public class ImplementInterface extends CaplinAction implements SelectionListene
             file.addAfter(newline, added);
         }
 
+        PsiDocumentManager.getInstance(e.getProject()).doPostponedOperationsAndUnblockDocument(e.getData(PlatformDataKeys.EDITOR).getDocument());
         DocEditor.appendString(e, interfaces);
     }
 
