@@ -59,16 +59,19 @@ public class ImplementInterface extends CaplinAction implements SelectionListene
             VirtualFile interfaceToPass = root.findFileByRelativePath("sdk/libs/javascript/caplin/src/" + filePath + ".js");
             writeInterface(interfaceToPass, selection, this.event);
         } else {
-            //TODO: Support client interfaces
+            VirtualFile interfaceToPass = FileUtil.findFile(root.findChild("apps"), filePath + ".js");
+            writeInterface(interfaceToPass, selection, this.event);
         }
     }
 
     private void writeInterface(VirtualFile interfaceToPass, final String selection, final AnActionEvent event) {
-
         try {
             String contents = new String(interfaceToPass.contentsToByteArray());
             int constructorEnd = FileUtil.getConstructorEndOffsetFromText(contents);
-            final String interfaces = contents.substring(constructorEnd, contents.length()).replace("\r\n", "\n").replace(selection, FileUtil.getFullClass(this.event.getData(PlatformDataKeys.VIRTUAL_FILE)));
+            final String interfaces =
+                    contents.substring(constructorEnd, contents.length())
+                    .replace("\r\n", "\n")
+                    .replace(selection, FileUtil.getFullClass(this.event.getData(PlatformDataKeys.VIRTUAL_FILE)));
 
             Runner.runWriteCommand(this.event.getProject(), new Runnable() {
                 public void run() {

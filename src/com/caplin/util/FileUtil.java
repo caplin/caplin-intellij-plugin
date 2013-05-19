@@ -57,7 +57,7 @@ public class FileUtil {
         VirtualFile parent = virtualFile.getParent();
 
         while (parent != null) {
-            if (parent.getName().equals("src")) {
+            if (parent.getName().equals("src") || parent.getName().equals("src-test")) {
                 return namespace;
             } else {
                 namespace = parent.getName() + "." + namespace;
@@ -176,5 +176,19 @@ public class FileUtil {
 
     public static boolean isJSFile(VirtualFile file) {
         return file != null && file.getExtension() != null && file.getExtension().equals("js");
+    }
+
+    public static VirtualFile findFile(VirtualFile root, String path) {
+        VirtualFile foundFile = null;
+        foundFile = root.findFileByRelativePath(path);
+        if (foundFile == null) {
+            for (int i = 0, l = root.getChildren().length; i < l; i++) {
+                foundFile = findFile(root.getChildren()[i], path);
+                if (foundFile != null) {
+                    break;
+                }
+            }
+        }
+        return foundFile;
     }
 }

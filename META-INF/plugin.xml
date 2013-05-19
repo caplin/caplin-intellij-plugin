@@ -37,8 +37,8 @@
       <action id="CodeCompletion.Settings" class="Settings" text="CC Settings" description="Code Completion Settings">
           <add-to-group group-id="FileMenu" anchor="last"/>
       </action>
-      <action id="com.caplin.GenerateClass" class="com.caplin.GenerateClass" text="Generate Namespaced Class"
-              description="Generate Namespaced Class">
+      <action id="com.caplin.GenerateClass" class="com.caplin.GenerateClass" text="Generate Class"
+              description="Generate Class">
           <add-to-group group-id="GenerateGroup" anchor="last"/>
           <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl C"/>
       </action>
@@ -46,12 +46,12 @@
               description="Generate Method">
           <add-to-group group-id="GenerateGroup" anchor="last"/>
       </action>
-      <action id="ImplementInterface" class="com.caplin.ImplementInterface" text="Implement Interface"
-              description="Implement Interface">
+      <action id="GeneratePrivateMethod" class="com.caplin.GeneratePrivateMethod" text="Generate Private Method"
+              description="Generate Private Method">
           <add-to-group group-id="GenerateGroup" anchor="last"/>
       </action>
-      <action id="GeneratePrivateMethod" class="com.caplin.GeneratePrivateMethod" text="Private Method"
-              description="Generate Private Method">
+      <action id="ImplementInterface" class="com.caplin.ImplementInterface" text="Implement Interface"
+              description="Implement Interface">
           <add-to-group group-id="GenerateGroup" anchor="last"/>
       </action>
   </actions>
