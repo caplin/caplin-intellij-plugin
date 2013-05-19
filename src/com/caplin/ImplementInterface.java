@@ -2,10 +2,7 @@ package com.caplin;
 
 import com.caplin.forms.ChooseInterface;
 import com.caplin.listener.SelectionListener;
-import com.caplin.util.DocEditor;
-import com.caplin.util.FileScanner;
-import com.caplin.util.FileUtil;
-import com.caplin.util.Runner;
+import com.caplin.util.*;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -14,6 +11,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.psi.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,23 +34,16 @@ public class ImplementInterface extends CaplinAction implements SelectionListene
     private void writeInterfaceDeclaration(AnActionEvent e, String interfaces, String selection) {
         PsiFile file = e.getData(LangDataKeys.PSI_FILE);
         PsiElement constructor = FileUtil.getConstructorFromPsiFile(file);
-        PsiElement elem = FileUtil.createPsiElementFromText(e, "caplin.implement(" + FileUtil.getFullClass(FileUtil.getVirtualFile(e)) + ", " + selection + ");");
 
-        PsiElement newline = FileUtil.createPsiElementFromText(e, "\n");
-        PsiElement added;
+        HashMap data = new HashMap();
+        data.put("fullClass", FileUtil.getFullClass(FileUtil.getVirtualFile(e)));
+        data.put("interface", selection);
+        PsiElement implementInterface = FileUtil.createPsiElementFromText(e, Template.INSTANCE.process("interface.ftl", data));
 
         if (constructor != null) {
-            added = file.addAfter(elem, constructor);
+            file.addAfter(implementInterface, constructor);
         } else {
-            added = file.add(elem);
-        }
-
-        if (added.getPrevSibling() != null && !added.getPrevSibling().getText().equals("\n")) {
-            file.addBefore(newline, added);
-        }
-
-        if (added.getNextSibling() != null && !added.getNextSibling().getText().equals("\n")) {
-            file.addAfter(newline, added);
+            file.add(implementInterface);
         }
 
         PsiDocumentManager.getInstance(e.getProject()).doPostponedOperationsAndUnblockDocument(e.getData(PlatformDataKeys.EDITOR).getDocument());

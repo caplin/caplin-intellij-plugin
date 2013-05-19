@@ -1,0 +1,1 @@
+caplin.implement(${fullClass}, ${interface});
