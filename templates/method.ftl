@@ -1,0 +1,4 @@
+/**
+ *
+ */
+${fullClass}.prototype.method=function(){};

@@ -42,12 +42,16 @@
           <add-to-group group-id="GenerateGroup" anchor="last"/>
           <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl C"/>
       </action>
-      <action id="GenerateMethod" class="com.caplin.GenerateMethod" text="Generate Method"
+      <action id="GenerateMethod" class="com.caplin.GeneratePublicMethod" text="Generate Method"
               description="Generate Method">
           <add-to-group group-id="GenerateGroup" anchor="last"/>
       </action>
       <action id="ImplementInterface" class="com.caplin.ImplementInterface" text="Implement Interface"
               description="Implement Interface">
+          <add-to-group group-id="GenerateGroup" anchor="last"/>
+      </action>
+      <action id="GeneratePrivateMethod" class="com.caplin.GeneratePrivateMethod" text="Private Method"
+              description="Generate Private Method">
           <add-to-group group-id="GenerateGroup" anchor="last"/>
       </action>
   </actions>

@@ -139,7 +139,7 @@ public class FileUtil {
 
     }
 
-    public static PsiElement createPsiFileFromText(AnActionEvent e, String code) {
+    public static PsiFile createPsiFileFromText(AnActionEvent e, String code) {
         FileType jsType = FileTypeManager.getInstance().getFileTypeByExtension("js");
         PsiFile file =  PsiFileFactory.getInstance(e.getProject()).createFileFromText("dummy.js", jsType, code);
         return file;
