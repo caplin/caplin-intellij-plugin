@@ -11,6 +11,7 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import org.jetbrains.annotations.NotNull;
@@ -138,10 +139,14 @@ public class FileUtil {
 
     }
 
-    public static PsiElement createPsiElementFromText(AnActionEvent e, String code) {
+    public static PsiElement createPsiFileFromText(AnActionEvent e, String code) {
         FileType jsType = FileTypeManager.getInstance().getFileTypeByExtension("js");
         PsiFile file =  PsiFileFactory.getInstance(e.getProject()).createFileFromText("dummy.js", jsType, code);
-        return file.getFirstChild();
+        return file;
+    }
+
+    public static PsiElement createPsiElementFromText(AnActionEvent e, String code) {
+        return createPsiFileFromText(e, code).getFirstChild();
     }
 
     public static VirtualFile getApplicationRoot(VirtualFile file) {
