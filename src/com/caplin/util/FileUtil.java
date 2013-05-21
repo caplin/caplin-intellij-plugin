@@ -156,9 +156,8 @@ public class FileUtil {
     }
 
     public static boolean isInterface(VirtualFile file) throws IOException {
-        String contents = null;
+        String contents = new String(file.contentsToByteArray());
         Boolean isInterface = false;
-        contents = new String(file.contentsToByteArray());
         if (contents.contains("@interface")) {
             isInterface = true;
         }

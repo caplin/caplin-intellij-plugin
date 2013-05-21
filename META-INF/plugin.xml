@@ -51,6 +51,9 @@
               description="Implement Interface">
           <add-to-group group-id="GenerateGroup" anchor="last"/>
       </action>
+      <action id="com.caplin.GetService" class="com.caplin.GetService" text="Get Service" description="Get Service">
+          <add-to-group group-id="GenerateGroup" anchor="last"/>
+      </action>
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
