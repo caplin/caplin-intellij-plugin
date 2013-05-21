@@ -73,6 +73,16 @@ public class WeightByCharacterGroupingTest {
     }
 
     @Test
+    public void anotherSearchTrimmedAndCaseInsensitive() {
+        MatchList after = filter.run("   AHiI   ", before);
+        assertEquals(4, after.size());
+        assertEquals("eeffgghhii", ((Match)after.get(0)).getName());
+        assertEquals("axabbccddee", ((Match)after.get(1)).getName());
+        assertEquals("ageddkkddkkdd", ((Match)after.get(2)).getName());
+        assertEquals("bbccddeeff", ((Match)after.get(3)).getName());
+    }
+
+    @Test
     public void moreMatchesWins() {
         before = new MatchList();
         before.add(new Match("abskkjkjkjk", 0));

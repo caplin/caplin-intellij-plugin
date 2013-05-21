@@ -3,7 +3,6 @@ package tests.com.caplin.filter;
 import com.caplin.filter.Filter;
 import com.caplin.filter.FilterChain;
 import com.caplin.filter.MatchList;
-import org.hamcrest.core.IsAnything;
 import org.junit.Test;
 
 import java.util.ArrayList;

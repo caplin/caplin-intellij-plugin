@@ -15,10 +15,8 @@ public class IncludesAllCharactersInOrder implements Filter {
 
     @Override
     public MatchList run(String searchFor, MatchList listToSearch) {
-        /*
-        Filter chain 1: Ensure all characters are present and in the correct order
-         */
-        searchFor = searchFor.trim();
+        searchFor = searchFor.trim().toLowerCase();
+
         String regex = ".*";
         for (int i = 0; i < searchFor.length(); i++){
             char c = searchFor.charAt(i);

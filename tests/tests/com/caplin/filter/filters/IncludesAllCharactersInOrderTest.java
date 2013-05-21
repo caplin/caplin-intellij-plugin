@@ -81,6 +81,14 @@ public class IncludesAllCharactersInOrderTest {
     }
 
     @Test
+    public void multipleCharacterSeparationTrimmedAndCaseInsensitive() {
+        MatchList after = filter.run("   AE  ", before);
+        assertEquals(2, after.size());
+        assertEquals("axabbccddee", ((Match)after.get(0)).getName());
+        assertEquals("ageik", ((Match)after.get(1)).getName());
+    }
+
+    @Test
     public void noResults() {
         MatchList after = filter.run("awlkjlwekfjewe", before);
         assertEquals(0, after.size());

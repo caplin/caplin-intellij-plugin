@@ -1,8 +1,8 @@
 <idea-plugin version="2">
-  <id>com.yourcompany.unique.plugin.id</id>
-  <name>Plugin display name here</name>
-  <version>1.0</version>
-  <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+  <id>com.caplin.js.codegenerator</id>
+  <name>Caplin Code Generator</name>
+  <version>0.9 beta</version>
+  <vendor email="stephen.south@caplin.com" url="http://www.caplin.com">Caplin</vendor>
 
   <description><![CDATA[
       Enter short description for your plugin here.<br>
@@ -34,23 +34,20 @@
 
   <actions>
     <!-- Add your actions here -->
-      <action id="CodeCompletion.Settings" class="Settings" text="CC Settings" description="Code Completion Settings">
-          <add-to-group group-id="FileMenu" anchor="last"/>
-      </action>
       <action id="com.caplin.GenerateClass" class="com.caplin.GenerateClass" text="Generate Class"
               description="Generate Class">
           <add-to-group group-id="GenerateGroup" anchor="last"/>
           <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl C"/>
       </action>
-      <action id="GenerateMethod" class="com.caplin.GeneratePublicMethod" text="Generate Method"
+      <action id="com.caplin.GeneratePublicMethod" class="com.caplin.GeneratePublicMethod" text="Generate Method"
               description="Generate Method">
           <add-to-group group-id="GenerateGroup" anchor="last"/>
       </action>
-      <action id="GeneratePrivateMethod" class="com.caplin.GeneratePrivateMethod" text="Generate Private Method"
+      <action id="com.caplin.GeneratePrivateMethod" class="com.caplin.GeneratePrivateMethod" text="Generate Private Method"
               description="Generate Private Method">
           <add-to-group group-id="GenerateGroup" anchor="last"/>
       </action>
-      <action id="ImplementInterface" class="com.caplin.ImplementInterface" text="Implement Interface"
+      <action id="com.caplin.ImplementInterface" class="com.caplin.ImplementInterface" text="Implement Interface"
               description="Implement Interface">
           <add-to-group group-id="GenerateGroup" anchor="last"/>
       </action>

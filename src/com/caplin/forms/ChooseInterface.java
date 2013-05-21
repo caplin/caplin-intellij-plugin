@@ -60,8 +60,9 @@ public class ChooseInterface extends JDialog implements KeyListener {
     }
 
     private void onOK() {
-        if (interfacelist.getSelectedValue() != null) {
-            listener.onSelected((String)interfacelist.getSelectedValue());
+        Object selectedValue = interfacelist.getSelectedValue();
+        if (selectedValue != null) {
+            listener.onSelected((String) selectedValue);
         };
         dispose();
     }
@@ -76,7 +77,7 @@ public class ChooseInterface extends JDialog implements KeyListener {
     }
 
     private void filterList() {
-        String searchFor = searchField.getText().trim().toLowerCase();
+        String searchFor = searchField.getText();
         ArrayList<String> filteredAndSortedList = this.filterChain.run(searchFor, interfaces);
         interfacelist.setListData(filteredAndSortedList.toArray());
         setListIndex(0);

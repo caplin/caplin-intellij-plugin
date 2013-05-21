@@ -19,9 +19,8 @@ import java.util.regex.Pattern;
 public class WeightByCharacterGrouping implements Filter {
     @Override
     public MatchList run(String searchFor, MatchList listToSearch) {
-        /*
-        Filter chain 2: Weight by grouped characters and sort
-         */
+        searchFor = searchFor.trim().toLowerCase();
+
         for (int loop = 1, length = searchFor.length(); loop <= length; loop++) {
             ArrayList<String> parts = getParts(searchFor, loop);
 
