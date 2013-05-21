@@ -14,8 +14,6 @@ public class Match implements Comparable {
     public Match(String name, Integer rating)  {
         this.name = name;
         this.rating = rating;
-
-        increaseRating(10);
     }
 
     public void increaseRating(int i) {
