@@ -41,13 +41,31 @@ public class ImplementInterface extends CaplinAction implements SelectionListene
         PsiElement implementInterface = FileUtil.createPsiElementFromText(e, Template.INSTANCE.process("interface.ftl", data));
 
         if (constructor != null) {
-            file.addAfter(implementInterface, constructor);
+           file.addAfter(implementInterface, constructor);
         } else {
             file.add(implementInterface);
         }
 
+        PsiFile interfaceElements = FileUtil.createPsiFileFromText(e, interfaces);
+
+
+        PsiElement[] children = interfaceElements.getChildren();
+        for (int i = 0, l = children.length; i < l; ++i) {
+            String text = children[i].getText();
+            PsiElement added;
+            if (!text.contains("caplin.implement") && !text.contains("caplin.extend")) {
+                added = file.add(children[i]);
+
+                if (text.contains(".prototype")) {
+                    file.addAfter(FileUtil.createPsiElementFromText(e, "\n"), added);
+                    file.addAfter(FileUtil.createPsiElementFromText(e, "\n"), added);
+                }
+            }
+        }
+
         PsiDocumentManager.getInstance(e.getProject()).doPostponedOperationsAndUnblockDocument(e.getData(PlatformDataKeys.EDITOR).getDocument());
-        DocEditor.appendString(e, interfaces);
+
+        //DocEditor.appendString(e, interfaces);
     }
 
     @Override
