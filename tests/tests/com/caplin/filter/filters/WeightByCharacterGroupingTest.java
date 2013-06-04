@@ -16,6 +16,7 @@ import static org.junit.Assert.assertEquals;
  * Time: 22:15
  * To change this template use File | Settings | File Templates.
  */
+
 public class WeightByCharacterGroupingTest {
 
     private MatchList before;
@@ -97,6 +98,19 @@ public class WeightByCharacterGroupingTest {
         assertEquals("akjskjsjkjkakjjskjskjakjkjskja", ((Match)after.get(1)).getName());
         assertEquals("akskjsdkjaksjksja", ((Match)after.get(2)).getName());
         assertEquals("abskkjkjkjk", ((Match)after.get(3)).getName());
+    }
+
+    @Test
+    public void gridViewListener() {
+        before = new MatchList();
+        before.add(new Match("caplin.trading.statemachine.TriggerActiveChangedListener", 0));
+        before.add(new Match("caplin.grid.GridViewListener", 0));
+
+        MatchList after = filter.run("caplingridlistener", before);
+        assertEquals(2, after.size());
+
+        assertEquals("caplin.grid.GridViewListener", ((Match)after.get(0)).getName());
+        assertEquals("caplin.trading.statemachine.TriggerActiveChangedListener", ((Match)after.get(1)).getName());
     }
 
 

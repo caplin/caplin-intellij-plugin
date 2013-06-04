@@ -27,23 +27,35 @@ public class WeightByCharacterGrouping implements Filter {
             for (int i = 0, l = listToSearch.size(); i < l; i = i + 1) {
                 Match match = (Match)listToSearch.get(i);
                 String matchName = match.getName().toLowerCase();
+                String[] words = getWords(match.getName());
 
                 for (int lc = 0, pl = parts.size(); lc < pl; lc++)     {
 
-                    Pattern pattern = Pattern.compile(parts.get(lc));
+                    String part = parts.get(lc);
+                    Pattern pattern = Pattern.compile(part);
                     Matcher matcher = pattern.matcher(matchName);
 
                     int matchCount = 0;
                     while (matcher.find()) matchCount++;
 
                     if (matchCount > 0) {
-                        match.increaseRating(loop * 1000 + (matchCount * loop * 100));
+                        match.increaseRating(loop * loop * 100 + (matchCount * loop));
+                    };
+
+                    for (int wordCount = 0, wordLength = words.length; wordCount < wordLength; wordCount++) {
+                        if (part.equals(words[wordCount])) {
+                            match.increaseRating(10000 * loop * words[wordCount].length());
+                        }
                     };
                 }
             }
         }
         Collections.sort(listToSearch);
         return listToSearch;
+    }
+
+    private String[] getWords(String matchName) {
+        return matchName.split("\\W+|(?=\\p{Upper})");
     }
 
     private ArrayList<String> getParts(String currentValue, int sectionLength) {
