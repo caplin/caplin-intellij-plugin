@@ -16,6 +16,12 @@ ALT + Insert is your friend. When in a JavaScript file (in a Caplin Trader appli
 - Generate private method
 - Implement an interface (and find it with a quick search similar to Sublime's implementation)
 
+Installation
+---------------------
+
+- Download the [plugin zip here (CodeCompletion0.1.zip)](build/CodeCompletion0.1.zip?raw=true)
+- In IntelliJ go to settings, plugins, install plugin from disk, choose the zip
+
 TODO
 ---------------------
 
