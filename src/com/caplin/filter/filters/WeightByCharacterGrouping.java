@@ -21,8 +21,8 @@ public class WeightByCharacterGrouping implements Filter {
     public MatchList run(String searchFor, MatchList listToSearch) {
         searchFor = searchFor.trim().toLowerCase();
 
-        for (int loop = 1, length = searchFor.length(); loop <= length; loop++) {
-            ArrayList<String> parts = getParts(searchFor, loop);
+        for (int partLength = 1, length = searchFor.length(); partLength <= length; partLength++) {
+            ArrayList<String> parts = getParts(searchFor, partLength);
 
             for (int i = 0, l = listToSearch.size(); i < l; i = i + 1) {
                 Match match = (Match)listToSearch.get(i);
@@ -39,12 +39,12 @@ public class WeightByCharacterGrouping implements Filter {
                     while (matcher.find()) matchCount++;
 
                     if (matchCount > 0) {
-                        match.increaseRating(loop * loop * 100 + (matchCount * loop));
+                        match.increaseRating(partLength * partLength * 100 + (matchCount * partLength));
                     };
 
                     for (int wordCount = 0, wordLength = words.length; wordCount < wordLength; wordCount++) {
                         if (part.equals(words[wordCount])) {
-                            match.increaseRating(10000 * loop * words[wordCount].length());
+                            match.increaseRating(10000 * partLength * words[wordCount].length());
                         }
                     };
                 }
