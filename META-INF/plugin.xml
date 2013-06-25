@@ -1,17 +1,23 @@
 <idea-plugin version="2">
   <id>com.caplin.js.codegenerator</id>
   <name>Caplin Code Generator</name>
-  <version>0.9 beta</version>
+  <version>0.1</version>
   <vendor email="stephen.south@caplin.com" url="http://www.caplin.com">Caplin</vendor>
 
   <description><![CDATA[
-      Enter short description for your plugin here.<br>
-      <small>most HTML tags may be used</small>
+      An IntelliJ code generation plugin for Caplin Trader projects.
       ]]></description>
 
   <change-notes><![CDATA[
-      Add change notes here.<br>
-      <small>most HTML tags may be used</small>
+      0.1<br><br>
+      ALT + Insert is your friend. When in a JavaScript file (in a Caplin Trader application) the following code generation options are available.
+
+    <ul>
+       <li>Generate class</li>
+       <li>Generate method</li>
+       <li>Generate private method</li>
+       <li>Implement an interface (and find it with a quick search similar to Sublime's implementation)</li>
+    </ul>
       ]]>
   </change-notes>
 
@@ -51,9 +57,9 @@
               description="Implement Interface">
           <add-to-group group-id="GenerateGroup" anchor="last"/>
       </action>
-      <action id="com.caplin.GetService" class="com.caplin.GetService" text="Get Service" description="Get Service">
+      <!--<action id="com.caplin.GetService" class="com.caplin.GetService" text="Get Service" description="Get Service">
           <add-to-group group-id="GenerateGroup" anchor="last"/>
-      </action>
+      </action>-->
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
